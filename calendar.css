@@ -1,0 +1,52 @@
+
+table.calendar-table {
+    border-collapse: collapse;
+    border: 1px solid black;
+
+    width: 98%;
+}
+table.calendar-table > tr > td {
+    border: 1px solid #808080;
+    width: 14%;
+}
+table.calendar-table > tr > th {
+    border: 1px solid #808080;
+    width: 14%;
+}
+
+.calendar-header-row-daynames {
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.calendar-data-row-dates {
+    height: 4em;
+}
+
+.calendar-holiday-header {
+    background-color: #ffa0a0;
+}
+
+.calendar-holiday-content {
+    background-color: #ffe0e0;
+}
+
+.calendar-pastday-header {
+    background-color: #c0c0c0;
+}
+
+.calendar-pastday-content {
+    background-color: #c0c0c0;
+}
+
+.calendar-normalday-header {
+    background-color: #d0d8f0;
+}
+
+.calendar-normalday-content {
+    background-color: #ffffff;
+}
+
+.calendar-month-name {
+    font-weight: bold;
+}
