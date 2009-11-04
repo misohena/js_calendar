@@ -1,151 +1,174 @@
 
-var weekDayNames = ["日", "月", "火", "水", "木", "金", "土"];
-var firstDayOfWeek = 0;
+var CalendarApp = {
+    cssPrefix: "calendar",
+    weekDayNames: ["日", "月", "火", "水", "木", "金", "土"],
+    firstDayOfWeek: 0,
 
+    // time/date Utilities
+    
+    getHolidayName: function(date)
+    {
+        // AddinBox( http://www.h3.dion.ne.jp/~sakatsu/index.htm )の
+        // 祝日判定ロジック( http://www.h3.dion.ne.jp/~sakatsu/holiday_logic.htm )を
+        // 使わせていただいております。
+        var dateStr = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+        return ktHolidayName(dateStr);
+    },
 
-function getHolidayName(date)
-{
-    // AddinBox( http://www.h3.dion.ne.jp/~sakatsu/index.htm )の
-    // 祝日判定ロジック( http://www.h3.dion.ne.jp/~sakatsu/holiday_logic.htm )を
-    // 使わせていただいております。
-    var dateStr = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
-    return ktHolidayName(dateStr);
-}
+    isHoliday: function(date)
+    {
+        return date.getDay() == 0 || date.getDay() == 6 || !!CalendarApp.getHolidayName(date);
+    },
 
-function isHoliday(date)
-{
-    return date.getDay() == 0 || date.getDay() == 6 || !!getHolidayName(date);
-}
+    isPastDate: function(date, now)
+    {
+        if(!now){
+            now = new Date();
+        }
 
-function isPastDate(date, now)
-{
-    if(!now){
-        now = new Date();
-    }
-
-    if(date.getFullYear() < now.getFullYear())
-        return true;
-    if(date.getFullYear() > now.getFullYear()){
+        if(date.getFullYear() < now.getFullYear())
+            return true;
+        if(date.getFullYear() > now.getFullYear()){
+            return false;
+        }
+        if(date.getMonth() < now.getMonth()){
+            return true;
+        }
+        if(date.getMonth() > now.getMonth()){
+            return false;
+        }
+        if(date.getDate() < now.getDate()){
+            return true;
+        }
+        //if(date.getDate() > now.getDate()){
+        //    return false;
+        //}
         return false;
-    }
-    if(date.getMonth() < now.getMonth()){
-        return true;
-    }
-    if(date.getMonth() > now.getMonth()){
-        return false;
-    }
-    if(date.getDate() < now.getDate()){
-        return true;
-    }
-//    if(date.getDate() > now.getDate()){
-//        return false;
-//    }
-    return false;
-}
+    },
 
-
-
-
-function getLastScriptNode()
-{
-    var n = document;
-    while(n && n.nodeName.toLowerCase() != "script") { n = n.lastChild;}
-    return n;
-}
-
-function createRowWeek(firstDate, func, rowClassName)
-{
-    var date = new Date();
-    date.setTime(firstDate.getTime());
+    addDate: function(date, delta)
+    {
+        date.setTime(date.getTime() + delta * (24*60*60*1000));
+    },
     
-    var row = document.createElement("tr");
-    row.className = rowClassName;
-    for(var d = 0; d < 7; ++d){
-        row.appendChild(func(date));
-        date.setTime(date.getTime() + 24*60*60*1000);
-    }
-    return row;
-}
 
-function createHeaderRowWeekDayNames(firstDate)
-{
-    return createRowWeek(
-        firstDate,
-        function(date){
-            var th = document.createElement("th");
-            th.appendChild(document.createTextNode(weekDayNames[date.getDay()]));
-            return th;
-        },
-        "calendar-header-row-daynames");
-}
+    // Web Utilities
 
-function getDateClassName(date, now)
-{
-    return isPastDate(date, now) ? "calendar-pastday"
-        : isHoliday(date) ? "calendar-holiday"
-        : "calendar-normalday";
-}
+    getLastScriptNode: function()
+    {
+        var n = document;
+        while(n && n.nodeName.toLowerCase() != "script") { n = n.lastChild;}
+        return n;
+    },
 
-function createHeaderRowDates(firstDate, now)
-{
-    return createRowWeek(
-        firstDate,
-        function(date){
-            var cell = document.createElement("td");
-            cell.className = getDateClassName(date, now) + "-header";
-
-            if(date.getDate() == 1){
-                var monthName = document.createElement("span");
-                monthName.className = "calendar-month-name";
-                monthName.appendChild(document.createTextNode(1 + date.getMonth()));
-                cell.appendChild(monthName);
-                cell.appendChild(document.createTextNode("/" + date.getDate()));
-            }
-            else{
-                cell.appendChild(document.createTextNode(date.getDate()));
-            }
-            
-            var holidayName = getHolidayName(date);
-            if(holidayName){
-                cell.appendChild(document.createTextNode(":" + holidayName));
-            }
-            return cell;
-        },
-        "calendar-header-row-dates");
-}
-
-function createDataRowDates(firstDate, now)
-{
-    return createRowWeek(
-        firstDate,
-        function(date){
-            var cell = document.createElement("td");
-            cell.className = getDateClassName(date, now) + "-content";
-            return cell;
-        },
-        "calendar-data-row-dates");
-}
-
-function placeCalendar()
-{
-    var table = document.createElement("table");
-    table.className = "calendar-table";
-
-
-    var now = new Date();
-    var posOnWeek = (7 + now.getDay() - firstDayOfWeek) % 7;
     
-    var date = new Date();
-    date.setTime(now.getTime() - (posOnWeek + 7) * 24*60*60*1000);
+    // View
+    
+    createWeekRow: function(firstDate, func, rowClassName)
+    {
+        var date = new Date();
+        date.setTime(firstDate.getTime());
+        
+        var row = document.createElement("tr");
+        row.className = rowClassName;
+        for(var d = 0; d < 7; ++d){
+            row.appendChild(func(date));
+            CalendarApp.addDate(date, 1);
+        }
+        return row;
+    },
 
-    table.appendChild(createHeaderRowWeekDayNames(date));
-    for(var week = 0; week < 10; ++week){
-        table.appendChild(createHeaderRowDates(date, now));
-        table.appendChild(createDataRowDates(date, now));
-        date.setTime( date.getTime() + 7*24*60*60*1000 );
+    createWeekDayNamesRow: function(firstDate)
+    {
+        return CalendarApp.createWeekRow(
+            firstDate,
+            function(date){
+                var th = document.createElement("th");
+                th.appendChild(document.createTextNode(CalendarApp.weekDayNames[date.getDay()]));
+                return th;
+            },
+            CalendarApp.cssPrefix + "-weekdaynames-row");
+    },
+
+    getDateClassName: function(date, now)
+    {
+        return CalendarApp.cssPrefix + (
+            CalendarApp.isPastDate(date, now) ? "-pastday" :
+            CalendarApp.isHoliday(date) ? "-holiday" :
+            "-normalday");
+    },
+
+    createDateHeaderCell: function(date, now)
+    {
+        var cell = document.createElement("td");
+        cell.className = CalendarApp.getDateClassName(date, now) + "-header";
+
+        if(date.getDate() == 1){
+            var monthName = document.createElement("span");
+            monthName.className = CalendarApp.cssPrefix + "-month-name";
+            monthName.appendChild(document.createTextNode(1 + date.getMonth()));
+            cell.appendChild(monthName);
+            cell.appendChild(document.createTextNode("/" + date.getDate()));
+        }
+        else{
+            cell.appendChild(document.createTextNode(date.getDate()));
+        }
+        
+        var holidayName = CalendarApp.getHolidayName(date);
+        if(holidayName){
+            cell.appendChild(document.createTextNode(":" + holidayName));
+        }
+        return cell;
+    },
+    
+    createDateContentCell: function(date, now)
+    {
+        var cell = document.createElement("td");
+        cell.className = CalendarApp.getDateClassName(date, now) + "-content";
+        return cell;
+    },
+    
+    createDateHeaderRow: function(firstDate, now)
+    {
+        return CalendarApp.createWeekRow(
+            firstDate,
+            function(date){return CalendarApp.createDateHeaderCell(date, now);},
+            CalendarApp.cssPrefix + "-date-header-row");
+    },
+
+    createDateContentRow: function(firstDate, now)
+    {
+        return CalendarApp.createWeekRow(
+            firstDate,
+            function(date){return CalendarApp.createDateContentCell(date, now);},
+            CalendarApp.cssPrefix + "-date-content-row");
+    },
+
+    createCalendarTable: function()
+    {
+        var table = document.createElement("table");
+        table.className = CalendarApp.cssPrefix + "-table";
+
+        var now = new Date();
+        var nowPosOnWeek = (7 + now.getDay() - CalendarApp.firstDayOfWeek) % 7;
+        
+        var date = new Date();
+        date.setTime(now.getTime() - (nowPosOnWeek + 7) * 24*60*60*1000);
+
+        table.appendChild(CalendarApp.createWeekDayNamesRow(date));
+        for(var week = 0; week < 10; ++week){
+            table.appendChild(CalendarApp.createDateHeaderRow(date, now));
+            table.appendChild(CalendarApp.createDateContentRow(date, now));
+            CalendarApp.addDate(date, 7);
+        }
+        return table;
+    },
+    
+    placeCalendar: function()
+    {
+        var parent = CalendarApp.getLastScriptNode().parentNode;
+        parent.appendChild(CalendarApp.createCalendarTable());
     }
     
-    var parent = getLastScriptNode().parentNode;
-    parent.appendChild(table);
 }
 

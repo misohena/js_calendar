@@ -14,14 +14,18 @@ table.calendar-table > tr > th {
     width: 14%;
 }
 
-.calendar-header-row-daynames {
+.calendar-weekdaynames-row {
     color: #ffffff;
     background-color: #000000;
 }
 
-.calendar-data-row-dates {
+.calendar-date-header-row {
+}
+
+.calendar-date-content-row {
     height: 4em;
 }
+
 
 .calendar-holiday-header {
     background-color: #ffa0a0;
