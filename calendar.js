@@ -1,4 +1,48 @@
 
+function CalendarCellCtrl(cell)
+{
+    var self = this;
+    this.cell = cell;
+    this.cell.addEventListener("click",
+                               function(){ self.onCellClick();},
+                               false);
+    this.textarea = null;
+}
+CalendarCellCtrl.prototype = {
+    onCellClick: function()
+    {
+        var self = this;
+        if(this.textarea){
+            return;
+        }
+        var textarea = document.createElement("textarea");
+        this.cell.appendChild(textarea);
+        textarea.focus();
+        textarea.addEventListener("blur",
+                                  function() { self.onTextAreaBlur();},
+                                  false);
+        this.textarea = textarea;
+    },
+
+    onTextAreaBlur: function()
+    {
+        if(!this.textarea){
+            return;
+        }
+        var value = this.textarea.value;
+        if(value){
+            var div = document.createElement("div");
+            div.className = CalendarApp.cssPrefix + "-item-div";
+            div.appendChild(document.createTextNode(value));
+            this.cell.appendChild(div);
+        }
+        this.cell.removeChild(this.textarea);
+        this.textarea = null;
+    }
+    
+};
+
+
 var CalendarApp = {
     cssPrefix: "calendar",
     weekDayNames: ["ì˙", "åé", "âŒ", "êÖ", "ñÿ", "ã‡", "ìy"],
@@ -61,7 +105,41 @@ var CalendarApp = {
         return n;
     },
 
-    
+    createDomNode: function(obj)
+    {
+        if(!obj){
+            return null;
+        }
+
+        if(obj.elem){
+            var e = document.createElement(obj.elem);
+            
+            if(obj.children){
+                for(var i = 0; i < obj.children.length; ++i){
+                    var child = CalendarApp.createDomNode(obj.children[i]);
+                    if(child){
+                        e.appendChild(child);
+                    }
+                }
+            }
+            
+            if(obj.atrs){
+                for(var key in obj.atrs){
+                    e[key] = obj.atrs[key];
+                }
+            }
+            return e;
+        }
+        else if(obj.textnode){
+            var t = document.createTextNode(obj.textnode);
+            return t;
+        }
+        else{
+            return null;
+        }
+
+    },
+
     // View
     
     createWeekRow: function(firstDate, func, rowClassName)
@@ -125,6 +203,9 @@ var CalendarApp = {
     {
         var cell = document.createElement("td");
         cell.className = CalendarApp.getDateClassName(date, now) + "-content";
+
+        var ctrl = new CalendarCellCtrl(cell);
+        
         return cell;
     },
     
