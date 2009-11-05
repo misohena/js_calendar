@@ -246,6 +246,10 @@ var CalendarApp = {
         }
 
         db.readEventItems(firstDate, date, function(items){
+            if(!items){
+                alert("ERROR:failed to read calendar events.");
+                return;
+            }
             for(var i = 0; i < items.length; ++i){
                 var cell = cellsDic[CalendarApp.convertDateToYYYYMMDD(items[i].date)];
                 if(cell){
@@ -408,6 +412,10 @@ CalendarApp.CalendarEventItemCtrl.prototype = {
     {
         if(!this.msg){return;}
 
+        if(!succeeded){
+            alert("ERROR:failed to modify the event.");
+        }
+        
         this.value = currValue;
         if(this.value == ""){
             // remove this item.
