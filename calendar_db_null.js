@@ -8,14 +8,20 @@ CalendarData.prototype = {
     readEventItems: function(firstDate, lastDate, callback)
     {
         if(callback){
-            callback([]);
+            callback([
+//                {date:new Date(2009,11-1,15), value:"—\’è1"},
+//                {date:new Date(2009,11-1,25), value:"11:00 —\’è2"},
+            ]);
         }
     },
 
     changeEventItem: function(date, oldValue, newValue, callback)
     {
         if(callback){
-            callback(true, newValue);
+            callback(
+                true, // succeeded?
+                newValue // current value
+            ); 
         }
     },
 };
