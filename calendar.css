@@ -8,11 +8,14 @@ table.calendar-table {
 table.calendar-table > tr > td {
     border: 1px solid #808080;
     width: 14%;
+    vertical-align: top;
 }
 table.calendar-table > tr > th {
     border: 1px solid #808080;
     width: 14%;
 }
+
+
 
 .calendar-weekdaynames-row {
     color: #ffffff;
@@ -25,6 +28,15 @@ table.calendar-table > tr > th {
 .calendar-date-content-row {
     height: 4em;
 }
+
+.calendar-date-content-row > td {
+    padding: 0 0 0.8em 0; /* bottom margin for new event creation */
+}
+
+.calendar-date-content-row > td > textarea {
+    margin: 0;
+}
+
 
 
 .calendar-holiday-header {
@@ -53,4 +65,8 @@ table.calendar-table > tr > th {
 
 .calendar-month-name {
     font-weight: bold;
+}
+
+.calendar-event-item {
+    border: 1px dashed #888888;
 }
