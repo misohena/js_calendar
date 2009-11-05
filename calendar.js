@@ -114,6 +114,25 @@ var CalendarApp = {
     },
 */
 
+
+    addEventListener: function(elem, evname, func)
+    {
+        if(!elem){return;}
+        if(elem.addEventListener){ //for DOM
+            elem.addEventListener(evname, func, false);
+        }
+        else if(elem.attachEvent){ //for IE
+            switch(evname){
+            case "click": evname = "onclick"; break;
+            case "blur": evname = "onblur"; break;
+            default: evname = ""; break;
+            }
+            if(evname != ""){
+                elem.attachEvent(evname, func);
+            }
+        }
+    },
+
     
     // Create Elements.
     
@@ -258,9 +277,7 @@ CalendarApp.CalendarCellCtrl = function(cell, date, db)
     this.date = new Date(date);
     this.db = db;
     this.cell = cell;
-    this.cell.addEventListener("click",
-                               function(){ self.onCellClick();},
-                               false);
+    CalendarApp.addEventListener(this.cell, "click", function(){ self.onCellClick();});
     this.items = new Array();
 };
 CalendarApp.CalendarCellCtrl.prototype = {
@@ -323,9 +340,7 @@ CalendarApp.CalendarEventItemCtrl.prototype = {
         var div = document.createElement("div");
         div.className = CalendarApp.cssPrefix + "-event-item";
         div.appendChild(document.createTextNode(value));
-        div.addEventListener("click",
-                             function(){self.onDivClick();},
-                             false);
+        CalendarApp.addEventListener(div, "click", function(){self.onDivClick();});
         return div;
     },
 
@@ -347,9 +362,7 @@ CalendarApp.CalendarEventItemCtrl.prototype = {
         var textarea = document.createElement("textarea");
         textarea.className = CalendarApp.cssPrefix + "-event-item-input";
         textarea.value = value;
-        textarea.addEventListener("blur",
-                                  function(){self.onTextAreaBlur();},
-                                  false);
+        CalendarApp.addEventListener(textarea, "blur", function(){self.onTextAreaBlur();});
         return textarea;
     },
 
