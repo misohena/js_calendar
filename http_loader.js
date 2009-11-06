@@ -55,7 +55,15 @@ HttpLoader.loadJson = function(url, func, method, reqstr)
 {
     HttpLoader.loadText(url, function(data){
         if(data){
-            func( eval("(" + data + ")") );
+            var obj;
+            try{
+                obj = eval("(" + data + ")");
+            }
+            catch(e){
+                func(null);
+                return;
+            }
+            func(obj);
         }
         else{
             func(null);
