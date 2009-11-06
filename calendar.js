@@ -11,7 +11,7 @@ var CalendarApp = {
     // Settings.
     
     cssPrefix: "calendar",
-    weekDayNames: ["“ú", "Œ", "‰Î", "…", "–Ø", "‹à", "“y"],
+    weekDayNames: ["æ—¥", "æœˆ", "ç«", "æ°´", "æœ¨", "é‡‘", "åœŸ"],
     holidayDaysOfWeek: (1<<0) | (1<<6),
     firstDayOfWeek: 0,
 
@@ -19,9 +19,9 @@ var CalendarApp = {
     
     getHolidayName: function(date)
     {
-        // AddinBox( http://www.h3.dion.ne.jp/~sakatsu/index.htm )‚Ì
-        // j“ú”»’èƒƒWƒbƒN( http://www.h3.dion.ne.jp/~sakatsu/holiday_logic.htm )‚ğ
-        // g‚í‚¹‚Ä‚¢‚½‚¾‚¢‚Ä‚¨‚è‚Ü‚·B
+        // AddinBox( http://www.h3.dion.ne.jp/~sakatsu/index.htm )ã®
+        // ç¥æ—¥åˆ¤å®šãƒ­ã‚¸ãƒƒã‚¯( http://www.h3.dion.ne.jp/~sakatsu/holiday_logic.htm )ã‚’
+        // ä½¿ã‚ã›ã¦ã„ãŸã ã„ã¦ãŠã‚Šã¾ã™ã€‚
         var dateStr = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
         return ktHolidayName(dateStr);
     },
@@ -298,8 +298,8 @@ CalendarApp.CalendarCellCtrl.prototype = {
 
     addEventItem: function(value, editingMode)
     {
-        ///@todo isEmpty‚È€–Ú‚ğíœ‚·‚éB
-        ///@todo ŒÂ”§ŒÀ‚ğİ‚¯‚éB
+        ///@todo isEmptyãªé …ç›®ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+        ///@todo å€‹æ•°åˆ¶é™ã‚’è¨­ã‘ã‚‹ã€‚
         
         this.items.push(new CalendarApp.CalendarEventItemCtrl(
             this.cell, value, editingMode, this.date, this.db));
@@ -377,7 +377,7 @@ CalendarApp.CalendarEventItemCtrl.prototype = {
         var self = this;
         var oldValue = this.value;
         var newValue = this.textarea.value;
-        ///@todo ’l‚ÌŒŸØ‚ª•K—vB
+        ///@todo å€¤ã®æ¤œè¨¼ãŒå¿…è¦ã€‚
         if(newValue != oldValue){
             this.value = newValue;
 

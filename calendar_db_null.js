@@ -9,8 +9,8 @@ CalendarData.prototype = {
     {
         if(callback){
             callback([
-//                {date:new Date(2009,11-1,15), value:"—\’è1"},
-//                {date:new Date(2009,11-1,25), value:"11:00 —\’è2"},
+//                {date:new Date(2009,11-1,15), value:"äºˆå®š1"},
+//                {date:new Date(2009,11-1,25), value:"11:00 äºˆå®š2"},
             ]);
         }
     },
