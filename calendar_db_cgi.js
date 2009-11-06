@@ -21,15 +21,13 @@ CalendarData.prototype = {
         });
         HttpLoader.loadJson(url, callback, "GET", null);
 //            callback([
-//                {date:new Date(2009,11-1,15), value:"—\’è1"},
-//                {date:new Date(2009,11-1,25), value:"11:00 —\’è2"},
+//                {date:new Date(2009,11-1,15), value:"äºˆå®š1"},
+//                {date:new Date(2009,11-1,25), value:"11:00 äºˆå®š2"},
 //            ]);
     },
 
     changeEventItem: function(date, oldValue, newValue, callback)
     {
-        if(!callback){return;}
-
         // modify.rb?date=YYYYMMDD&old=<oldValue>&new=<newValue>
         // result: {succeeded:<bool>   , value:<string>}
 
@@ -40,11 +38,13 @@ CalendarData.prototype = {
             'new':newValue
         });
         HttpLoader.loadJson(url, function(data){
-            if(data){
-                callback(data.succeeded, data.value);
-            }
-            else{
-                callback(false, oldValue);
+            if(callback){
+                if(data){
+                    callback(data.succeeded, data.value);
+                }
+                else{
+                    callback(false, oldValue);
+                }
             }
         }, "POST", reqstr);
 
