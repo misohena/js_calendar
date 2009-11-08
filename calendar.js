@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 // title SimpleCalendar
 // since 2009-11-03
 // author AKIYAMA Kouhei

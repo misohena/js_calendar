@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 //_/
 //_/ CopyRight(C) K.Tsunoda(AddinBox) 2001 All Rights Reserved.

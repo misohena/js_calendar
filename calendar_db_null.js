@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 //
 // example of async interface for calendar DB.
 //
