@@ -1,5 +1,11 @@
+// -*- coding: utf-8 -*-
 //
-// async interface for calendar DB.
+// クッキーへデータを保存するカレンダーデータベースインタフェースです。
+//
+// ブラウザがデータを記憶するため、サーバーを用意する必要がありません。
+// ただし保存できる容量は3800バイトまでです。その容量を越えた時点でそれ以上書き込めなくなります。
+// 7日以上過ぎたイベントは自動的に消去するので、沢山の予定を書き込まなければある程度使い続けることが出来ます。
+// ただしクッキーは何かの拍子に誤って消してしまうことがあるので、あまり信用しない方が良いかもしれません。
 //
 function CalendarData()
 {
@@ -9,101 +15,153 @@ CalendarData.prototype = {
     {
         if(!callback){return;}
 
-        var firstNum = this.toDateNum(firstDate);
-        var lastNum = this.toDateNum(lastDate);
+        // read all events from the cookie.
         var events = this.getEvents();
-        var eventsIn = new Array();
+
+        // filter events [firstDate, lastdate)
+        var firstNum = this.convDateToNum(firstDate);
+        var lastNum = this.convDateToNum(lastDate);
+        var eventsInRange = new Array();
         for(var i = 0; i < events.length; ++i){
-            var d = this.toDateNum(events[i].date);
+            var d = this.convDateToNum(events[i].date);
             if(d >= firstNum && d < lastNum){
-                eventsIn.push(events[i]);
+                eventsInRange.push(events[i]);
             }
         }
-        callback(eventsIn);
+
+        // notify the result.
+        callback(eventsInRange);
     },
 
     changeEventItem: function(date, oldValue, newValue, callback)
     {
+        // read all events from the cookie.
         var events = this.getEvents();
-        var i;
-        for(i = 0; i < events.length; ++i){
-            if(this.toDateNum(events[i].date) == this.toDateNum(date) && events[i].value == oldValue){
+
+        // find the index of the target event(date, oldValue).
+        var target;
+        var dateNum = this.convDateToNum(date);
+        for(target = 0; target < events.length; ++target){
+            if(this.convDateToNum(events[target].date) == dateNum && events[target].value == oldValue){
                 break;
             }
         }
 
         var succeeded = false;
-        var currValue = "";
         if(! oldValue && newValue){
+            // add new event.
             events.push({date: new Date(date), value: newValue});
             succeeded = true;
-            currValue = newValue;
         }
         else if(oldValue && ! newValue){
-            if(i < events.length){
-                events.splice(i, 1);
+            // delete event.
+            if(target < events.length){
+                events.splice(target, 1);
                 succeeded = true;
-                currValue = newValue;
             }
             else{
                 //error
             }
         }
         else if(oldValue && newValue){
-            if(i < events.length){
-                events[i].value = newValue;
+            // change event value.
+            if(target < events.length){
+                events[target].value = newValue;
                 succeeded = true;
-                currValue = newValue;
             }
             else{
                 //error
             }
         }
 
-        this.setEvents(events);
-        
+        // write all events to the cookie.
+        if(succeeded){
+            succeeded = this.setEvents(events);
+        }
+
+        // notify the result.
         if(callback){
-            callback(succeeded, currValue);
+            callback(succeeded, succeeded ? newValue : "");
         }
     },
 
-    toDateNum: function(date)
+    convDateToNum: function(date)
     {
         return date.getFullYear()*10000 + (date.getMonth()+1)*100 + date.getDate();
     },
 
-    getEvents: function()
+    convNumToDate: function(num)
     {
-        //alert(document.cookie);
-        
-        var events = new Array();
-        var items = document.cookie.split(";");
-        for(var i = 0; i < items.length; ++i){
-            var found = items[i].match(/^ *d([0-9]+)=(.*)$/);
-            if(found){
-                var date = parseInt(found[1]);
-                var value = found[2];
-                events.push({
-                    date: new Date(date / 10000, (date / 100 % 100)-1, date%100),
-                    value: unescape(value)
-                });
-            }
-        }
-        return events;
+        return new Date(Math.floor(num / 10000), Math.floor(num/100)%100-1, num%100);
     },
 
+    cookieName: "events",
+    cookieLengthMax: 3800,
+    
+    getEvents: function()
+    {
+        var cookies = document.cookie;
+        //alert(cookies);
+        var pos = cookies.indexOf(this.cookieName + "=");
+        if(pos == -1){
+            return [];
+        }
+
+        var first = pos + this.cookieName.length + 1;
+        var last = cookies.indexOf(";", first);
+        if(last == -1){
+            last = cookies.length;
+        }
+        // ex: "events=20091107:birthday&20091107:meeting&20091120:holiday"
+        var cookieValue = cookies.substring(first, last);
+        var events = new Array();
+        var lines = cookieValue.split('&');
+        for(var i = 0; i < lines.length; ++i){
+            var datevalue = lines[i].split(':');
+            events.push({
+                date: this.convNumToDate(parseInt(datevalue[0])),
+                value: unescape(datevalue[1])
+            });
+        }
+
+        ///@todo sort
+        
+        return events;
+    },
+    
     setEvents: function(events)
     {
-        var now = new Date();
-        var expire = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
-        var str = "";
+        // create a cookie value. and remove old events.
+        var dateNumLower = this.convDateToNum(new Date((new Date()).getTime() - 7*24*60*60*1000));
+        var cookieValue = "";
         for(var i = 0; i < events.length; ++i){
-            str += "d" + this.toDateNum(events[i].date).toString() + "=" + escape(events[i].value) + "; ";
-        }
-        str += "expires=" + expire.toGMTString();
+            var dateNum = this.convDateToNum(events[i].date);
+            if(dateNum < dateNumLower){
+                continue;
+            }
 
-        alert(str);
-        document.cookie = str;
+            if(cookieValue != ""){
+                cookieValue += "&";
+            }
+            cookieValue += dateNum + ":" + escape(events[i].value)
+        }
+
+        // validate length of cookie value.
+        if(cookieValue.length >= this.cookieLengthMax){
+            return false; // error
+        }
+
+        // expiration date of the cookie value.
+        var expires = new Date();
+        expires.setFullYear(expires.getFullYear() + 1);
+
+        // write a cookie.
+        var cookie = this.cookieName + "=" + cookieValue
+            + "; expires=" + expires.toGMTString();
+        //alert(cookie);
+        document.cookie = cookie;
+
+        return true;
     }
 };
 
