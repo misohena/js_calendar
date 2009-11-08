@@ -1,5 +1,6 @@
+// -*- coding: utf-8 -*-
 //
-// async interface for calendar DB.
+// async interface for calendar DB CGI.
 //
 
 // require http_loader.js
@@ -7,6 +8,7 @@
 function CalendarData()
 {
 }
+CalendarData.CGI_DIR = "."
 CalendarData.prototype = {
     readEventItems: function(firstDate, lastDate, callback)
     {
@@ -15,15 +17,11 @@ CalendarData.prototype = {
         // list.rb?first=YYYYMMDD&last=YYYYMMDD
         //  (An interval that does not contains lastDate)
         // result: [ {date:<date>, value:<string>}, ... ]
-        var url = "list.rb?" + HttpLoader.encodeKeyValue({
+        var url = CalendarData.CGI_DIR + "/list.rb?" + HttpLoader.encodeKeyValue({
             first: this.toYYYYMMDD(firstDate),
             last: this.toYYYYMMDD(lastDate)
         });
         HttpLoader.loadJson(url, callback, "GET", null);
-//            callback([
-//                {date:new Date(2009,11-1,15), value:"予定1"},
-//                {date:new Date(2009,11-1,25), value:"11:00 予定2"},
-//            ]);
     },
 
     changeEventItem: function(date, oldValue, newValue, callback)
@@ -31,7 +29,7 @@ CalendarData.prototype = {
         // modify.rb?date=YYYYMMDD&old=<oldValue>&new=<newValue>
         // result: {succeeded:<bool>   , value:<string>}
 
-        var url = "modify.rb";
+        var url = CalendarData.CGI_DIR + "/modify.rb";
         var reqstr = HttpLoader.encodeKeyValue({
             date: this.toYYYYMMDD(date),
             old:oldValue,
@@ -47,12 +45,6 @@ CalendarData.prototype = {
                 }
             }
         }, "POST", reqstr);
-
-//            callback(
-//                true, // succeeded?
-//                newValue // current value
-//            ); 
-
     },
 
     toYYYYMMDD: function(date)
