@@ -20,11 +20,7 @@ var CalendarApp = {
     
     getHolidayName: function(date)
     {
-        // AddinBox( http://www.h3.dion.ne.jp/~sakatsu/index.htm )の
-        // 祝日判定ロジック( http://www.h3.dion.ne.jp/~sakatsu/holiday_logic.htm )を
-        // 使わせていただいております。
-        var dateStr = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
-        return ktHolidayName(dateStr);
+        return JapaneseHoliday.getHolidayName(date);
     },
 
     isHoliday: function(date)
