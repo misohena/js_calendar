@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# Copyright(c) 2009 AKIYAMA Kouhei.
 
 #
 # synopsis: list.rb?first=YYYYMMDD&last=YYYYMMDD

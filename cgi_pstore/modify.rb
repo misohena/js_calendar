@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# Copyright(c) 2009 AKIYAMA Kouhei.
 
 #
 # synopsis: modify.rb?date=YYYYMMDD&old=<oldValue>&new=<newValue>

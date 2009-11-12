@@ -1,3 +1,4 @@
+# Copyright(c) 2009 AKIYAMA Kouhei.
 
 require 'date'
 require 'uri'

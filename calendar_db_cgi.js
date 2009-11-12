@@ -2,6 +2,8 @@
 //
 // async interface for calendar DB CGI.
 //
+// Copyright(c) 2009 AKIYAMA Kouhei.
+
 
 // require http_loader.js
 

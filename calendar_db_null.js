@@ -2,6 +2,8 @@
 //
 // example of async interface for calendar DB.
 //
+// Copyright(c) 2009 AKIYAMA Kouhei.
+//
 function CalendarData()
 {
 }

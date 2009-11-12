@@ -1,4 +1,6 @@
 // -*- coding: utf-8 -*-
+//
+// Copyright(c) 2009 AKIYAMA Kouhei.
 /*
 参考文献:
 - http://law.e-gov.go.jp/htmldata/S23/S23HO178.html

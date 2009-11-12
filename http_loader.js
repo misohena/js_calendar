@@ -1,4 +1,5 @@
 // -*- coding: utf-8 -*-
+// Copyright(c) 2009 AKIYAMA Kouhei.
 
 var HttpLoader = {};
 
