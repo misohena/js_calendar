@@ -21,6 +21,10 @@
       <li><a href="calendar_cgi_pstore.xhtml">CGI経由保存版(書き込みはCGI経由でサーバーへ保存されます)</a></li>
     </ul>
 
+    <h2>ダウンロード</h2>
+    <ul>
+      <li><a href="js_calendar_1_0.tar.gz">js_calendar_1_0.tar.gz</a></li>
+    </ul>
 
     <h2>ファイル構成</h2>
     <table border="1">
@@ -31,19 +35,25 @@
         <tr><td rowspan="4">使用例</td><td>calendar_null.xhtml</td><td>カレンダーのHTML。データを保存しないバージョン。UIのテスト用。</td><td>default.css, calendar.css, holiday.js, calendar.js, calendar_db_null.js</td></tr>
         <tr>  <td>calendar_cgi_pstore.xhtml</td><td>カレンダーのHTML。CGIを通してデータを保存するバージョン。サーバー上でのデータの保存はRubyのpstoreを使う。</td><td>default.css, calendar.css, holiday.js, calendar.js, calendar_db_cgi.js, http_loader.js</td></tr>
         <tr>  <td>calendar_cookie.xhtml</td><td>カレンダーのHTML。クッキーにデータを保存するバージョン。サーバーは不要。データの共有は出来ない。容量制限あり。</td><td>default.css, calendar.css, holiday.js, calendar.js, calendar_db_cookie.js</td></tr>
-        <tr>  <td>default.css</td><td>*.xhtmlから共通で使用するスタイルシート。</td><td></td></tr>
-        <tr><td rowspan="3">UI</td><td>calendar.js</td><td>カレンダーのUIを実現するためのJavaScript。テーブルの生成、セルの入力処理、イベント項目の表示・入力処理を行う。実際のデータの読み書きはcalendar_db_*.jsのいずれかに依頼する。</td><td>holiday.js, calendar_db_*.js</td></tr>
-        <tr>  <td>calendar.css</td><td>calendar.jsが生成するカレンダーテーブルの見た目を決めるスタイルシート。</td><td></td></tr>
-        <tr>  <td>holiday.js</td><td>休日情報を提供するJavaScript。</td><td></td></tr>
-        <tr><td rowspan="4">データインタフェース</td><td>calendar_db_null.js</td><td>データを保存しないダミーのカレンダーデータインタフェース。</td><td></td></tr>
-        <tr>  <td>calendar_db_cgi.js</td><td>CGIを通してサーバーにデータを保存するカレンダーデータインタフェース。</td><td>http_loader.js, cgi_*/list.rb, cgi_*/modify.rb</td></tr>
-        <tr>  <td>calendar_db_cookie.js</td><td>クッキーにデータを保存するカレンダーデータインタフェース。calendar.jsが使う。</td><td></td></tr>
-        <tr>  <td>http_loader.js</td><td>サーバーとの非同期通信をサポートするJavaScript。calendar_db_cgi.jsが使う。</td><td></td></tr>
+        <tr>  <td><a href="default.css">default.css</a></td><td>*.xhtmlから共通で使用するスタイルシート。</td><td></td></tr>
+        <tr><td rowspan="3">UI</td><td><a href="calendar.js">calendar.js</a></td><td>カレンダーのUIを実現するためのJavaScript。テーブルの生成、セルの入力処理、イベント項目の表示・入力処理を行う。実際のデータの読み書きはcalendar_db_*.jsのいずれかに依頼する。</td><td>holiday.js, calendar_db_*.js</td></tr>
+        <tr>  <td><a href="calendar.css">calendar.css</a></td><td>calendar.jsが生成するカレンダーテーブルの見た目を決めるスタイルシート。</td><td></td></tr>
+        <tr>  <td><a href="holiday.js">holiday.js</a></td><td>休日情報を提供するJavaScript。</td><td></td></tr>
+        <tr><td rowspan="4">データインタフェース</td><td><a href="calendar_db_null.js">calendar_db_null.js</a></td><td>データを保存しないダミーのカレンダーデータインタフェース。</td><td></td></tr>
+        <tr>  <td><a href="calendar_db_cgi.js">calendar_db_cgi.js</a></td><td>CGIを通してサーバーにデータを保存するカレンダーデータインタフェース。</td><td>http_loader.js, cgi_*/list.rb, cgi_*/modify.rb</td></tr>
+        <tr>  <td><a href="calendar_db_cookie.js">calendar_db_cookie.js</a></td><td>クッキーにデータを保存するカレンダーデータインタフェース。calendar.jsが使う。</td><td></td></tr>
+        <tr>  <td><a href="http_loader.js">http_loader.js</a></td><td>サーバーとの非同期通信をサポートするJavaScript。calendar_db_cgi.jsが使う。</td><td></td></tr>
         <tr><td rowspan="3">CGI(pstore)</td><td>cgi_pstore/list.rb</td><td>読み込み用CGI。calendar_db_cgi.rbから呼び出す。</td><td>cgi_pstore/utils.rb</td></tr>
         <tr><td>cgi_pstore/modify.rb</td><td>書き込み用CGI。calendar_db_cgi.rbから呼び出す。</td><td>cgi_pstore/utils.rb</td></tr>
         <tr><td>cgi_pstore/utils.rb</td><td>list.rbとmodify.rbから使う共通コード。</td><td></td></tr>
       </tbody>
     </table>
+
+    <h2>カスタマイズ</h2>
+    <p>月曜始まりにするには、calendar.js内の「firstDayOfWeek: 0」を「firstDayOfWeek: 1」へ変更してください。</p>
+    <p>休みの曜日を変更するには、calendar.js内の「holidayDaysOfWeek:」の後を変更してください。</p>
+    <p>見た目(色合いや寸法)を変更するには、calendar.cssを変更してください。</p>
+
 
     <h2>ライセンス</h2>
     <p>本ソフトウェアはMITライセンスに基づき自由に使用することが出来ます。</p>
@@ -78,7 +88,7 @@ THE SOFTWARE.</p>
           <img src="http://jigsaw.w3.org/css-validator/images/vcss" 
             alt="Valid CSS!" height="31" width="88" /></a>
       </div>
-      <div><!-- ts start -->Last modified: 2009-11-08 13:29:14+0900<!-- ts end --></div>
+      <div><!-- ts start -->Last modified: 2009-11-13 00:14:26+0900<!-- ts end --></div>
     </div>
   </body>
 </html>
