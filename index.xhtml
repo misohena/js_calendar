@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
+  <head>
+    <title>JavaScriptカレンダー</title>
+  </head>
+  <body>
+
+    <h1>JavaScriptカレンダー</h1>
+    <ul>
+      <li>紙の卓上カレンダーの代わりに作ったシンプルなJavaScriptカレンダーです。</li>
+      <li>AJAX的にワンクリックで簡単に予定を書き込めます。</li>
+      <li>書き込んだ内容をどう保存するかは、色々選べます。</li>
+    </ul>
+
+    <h2>動作例</h2>
+    <ul>
+      <li><a href="calendar_null.xhtml">UIテスト用(書き込みは保存されません)</a></li>
+      <li><a href="calendar_cookie.xhtml">Cookie保存版(書き込みはクッキーへ保存されます)</a></li>
+      <li><a href="calendar_cgi_pstore.xhtml">CGI経由保存版(書き込みはCGI経由でサーバーへ保存されます)</a></li>
+    </ul>
+
+
+    <h2>ファイル構成</h2>
+    <table border="1">
+      <thead>
+        <tr><th>分類</th><th>ファイル名</th><th>概要</th><th>依存するファイル</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="4">使用例</td><td>calendar_null.xhtml</td><td>カレンダーのHTML。データを保存しないバージョン。UIのテスト用。</td><td>default.css, calendar.css, holiday.js, calendar.js, calendar_db_null.js</td></tr>
+        <tr>  <td>calendar_cgi_pstore.xhtml</td><td>カレンダーのHTML。CGIを通してデータを保存するバージョン。サーバー上でのデータの保存はRubyのpstoreを使う。</td><td>default.css, calendar.css, holiday.js, calendar.js, calendar_db_cgi.js, http_loader.js</td></tr>
+        <tr>  <td>calendar_cookie.xhtml</td><td>カレンダーのHTML。クッキーにデータを保存するバージョン。サーバーは不要。データの共有は出来ない。容量制限あり。</td><td>default.css, calendar.css, holiday.js, calendar.js, calendar_db_cookie.js</td></tr>
+        <tr>  <td>default.css</td><td>*.xhtmlから共通で使用するスタイルシート。</td><td></td></tr>
+        <tr><td rowspan="3">UI</td><td>calendar.js</td><td>カレンダーのUIを実現するためのJavaScript。テーブルの生成、セルの入力処理、イベント項目の表示・入力処理を行う。実際のデータの読み書きはcalendar_db_*.jsのいずれかに依頼する。</td><td>holiday.js, calendar_db_*.js</td></tr>
+        <tr>  <td>calendar.css</td><td>calendar.jsが生成するカレンダーテーブルの見た目を決めるスタイルシート。</td><td></td></tr>
+        <tr>  <td>holiday.js</td><td>休日情報を提供するJavaScript。</td><td></td></tr>
+        <tr><td rowspan="4">データインタフェース</td><td>calendar_db_null.js</td><td>データを保存しないダミーのカレンダーデータインタフェース。</td><td></td></tr>
+        <tr>  <td>calendar_db_cgi.js</td><td>CGIを通してサーバーにデータを保存するカレンダーデータインタフェース。</td><td>http_loader.js, cgi_*/list.rb, cgi_*/modify.rb</td></tr>
+        <tr>  <td>calendar_db_cookie.js</td><td>クッキーにデータを保存するカレンダーデータインタフェース。calendar.jsが使う。</td><td></td></tr>
+        <tr>  <td>http_loader.js</td><td>サーバーとの非同期通信をサポートするJavaScript。calendar_db_cgi.jsが使う。</td><td></td></tr>
+        <tr><td rowspan="3">CGI(pstore)</td><td>cgi_pstore/list.rb</td><td>読み込み用CGI。calendar_db_cgi.rbから呼び出す。</td><td>cgi_pstore/utils.rb</td></tr>
+        <tr><td>cgi_pstore/modify.rb</td><td>書き込み用CGI。calendar_db_cgi.rbから呼び出す。</td><td>cgi_pstore/utils.rb</td></tr>
+        <tr><td>cgi_pstore/utils.rb</td><td>list.rbとmodify.rbから使う共通コード。</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h2>ライセンス</h2>
+    <p>本ソフトウェアはMITライセンスに基づき自由に使用することが出来ます。</p>
+
+    <p>Copyright (c) 2009 AKIYAMA Kouhei</p>
+
+    <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+    <p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+
+
+    <div class="footer">
+      <div>
+        <a href="http://validator.w3.org/check/referer" class="imglink">
+          <img src="http://www.w3.org/Icons/valid-xhtml11"
+            alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+        <a href="http://jigsaw.w3.org/css-validator/check/referer" class="imglink">
+          <img src="http://jigsaw.w3.org/css-validator/images/vcss" 
+            alt="Valid CSS!" height="31" width="88" /></a>
+      </div>
+      <div><!-- ts start -->Last modified: 2009-11-08 13:29:14+0900<!-- ts end --></div>
+    </div>
+  </body>
+</html>
