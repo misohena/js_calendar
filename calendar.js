@@ -15,6 +15,7 @@ var CalendarApp = {
     weekDayNames: ["日", "月", "火", "水", "木", "金", "土"],
     holidayDaysOfWeek: (1<<0) | (1<<6),
     firstDayOfWeek: 0,
+    displayWeeks: 10,
 
     // Date/Time Utilities
     
@@ -174,7 +175,7 @@ var CalendarApp = {
         if(date.getDate() == 1){
             var monthName = document.createElement("span");
             monthName.className = CalendarApp.cssPrefix + "-month-name";
-            monthName.appendChild(document.createTextNode(1 + date.getMonth()));
+            monthName.appendChild(document.createTextNode("[" + (1 + date.getMonth()) + "]"));
             cell.appendChild(monthName);
             cell.appendChild(document.createTextNode("/" + date.getDate()));
         }
@@ -218,31 +219,10 @@ var CalendarApp = {
             CalendarApp.cssPrefix + "-date-content-row");
     },
 
-    createCalendarTable: function()
+    
+    readEventItemsToCells: function(db, firstDate, lastDate, cellsDic)
     {
-        var db = new CalendarData();
-        
-        var table = document.createElement("table");
-        table.className = CalendarApp.cssPrefix + "-table";
-
-        var now = new Date();
-        var nowPosOnWeek = (7 + now.getDay() - CalendarApp.firstDayOfWeek) % 7;
-
-        var firstDate = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate() - (nowPosOnWeek + 7)); ///@todo ok?
-        var date = new Date(firstDate);
-
-        var cellsDic = new Object;
-        table.appendChild(CalendarApp.createWeekDayNamesRow(date));
-        for(var week = 0; week < 10; ++week){
-            table.appendChild(CalendarApp.createDateHeaderRow(date, now));
-            table.appendChild(CalendarApp.createDateContentRow(date, now, db, cellsDic));
-            CalendarApp.addDate(date, 7);
-        }
-
-        db.readEventItems(firstDate, date, function(items){
+        db.readEventItems(firstDate, lastDate, function(items){
             if(!items){
                 alert("ERROR:failed to read calendar events.");
                 return;
@@ -254,18 +234,90 @@ var CalendarApp = {
                 }
             }
         });
+    },
+
+    appendWeeks: function(firstDate, weekCount, db, table, cellsDic, now)
+    {
+        var date = new Date(firstDate);
+        for(var week = 0; week < weekCount; ++week){
+            table.appendChild(CalendarApp.createDateHeaderRow(date, now));
+            table.appendChild(CalendarApp.createDateContentRow(date, now, db, cellsDic));
+            CalendarApp.addDate(date, 7);
+        }
         
-        return table;
+        CalendarApp.readEventItemsToCells(db, firstDate, date, cellsDic);
+        
+        return date;
+    },
+    
+    createCalendarCtrl: function()
+    {
+        var db = new CalendarData();
+        
+        var now = new Date();
+        var nowPosOnWeek = (7 + now.getDay() - CalendarApp.firstDayOfWeek) % 7;
+
+        var firstDate = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() - (nowPosOnWeek + 7)); ///@todo ok?
+
+        
+        var table = document.createElement("table");
+        table.className = CalendarApp.cssPrefix + "-table";
+
+        table.appendChild(CalendarApp.createWeekDayNamesRow(firstDate));
+
+        var cellsDic = new Object;
+        var lastDate = CalendarApp.appendWeeks(firstDate, CalendarApp.displayWeeks, db, table, cellsDic, now);
+
+        return new CalendarApp.CalendarCtrl(db, table, cellsDic, firstDate, lastDate, now);
     },
     
     placeCalendar: function()
     {
         var parent = CalendarApp.getLastScriptNode().parentNode;
-        parent.appendChild(CalendarApp.createCalendarTable());
+        parent.appendChild(CalendarApp.createCalendarCtrl().div);
     }
     
 };
 
+
+
+//
+// calendar control.
+//
+CalendarApp.CalendarCtrl = function(db, table, cellsDic, firstDate, lastDate, now)
+{
+    this.db = db;
+    this.table = table;
+    this.cellsDic = cellsDic;
+    this.firstDate = firstDate;
+    this.lastDate = lastDate;
+    this.now = now;
+    
+    this.div = document.createElement("div");
+    this.div.appendChild(table);
+
+    this.div.appendChild(this.createButtonMore());
+};
+CalendarApp.CalendarCtrl.prototype = {
+    createButtonMore: function()
+    {
+        var self = this;
+        var more = document.createElement("input");
+        more.setAttribute("type", "button");
+        more.setAttribute("value", "more..");
+        CalendarApp.addEventListener(more, "click", function(){self.onClickMore();});
+        return more;
+    },
+    
+    onClickMore: function()
+    {
+        this.lastDate = CalendarApp.appendWeeks(
+            this.lastDate, 4, this.db, this.table, this.cellsDic, this.now);
+    }
+};
 
 
 
