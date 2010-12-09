@@ -3,7 +3,7 @@ table.calendar-table {
     border-collapse: collapse;
     border: 1px solid black;
 
-    width: 98%;
+    width: 100%;
 }
 table.calendar-table > tr > td {
     border: 1px solid #808080;
