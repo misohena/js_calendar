@@ -74,3 +74,16 @@ table.calendar-table > tr > th {
 .calendar-event-item {
     border: 1px dashed #888888;
 }
+
+/* month separation lines  */
+table.calendar-table > tr > td.calendar-last-dayweek-of-month-content {
+    border-bottom: 3px solid #505050;
+}
+
+table.calendar-table > tr > td.calendar-last-date-of-month-content {
+    border-right: 3px solid #505050;
+}
+
+table.calendar-table > tr > td.calendar-last-date-of-month-header {
+    border-right: 3px solid #505050;
+}
