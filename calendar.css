@@ -65,6 +65,10 @@ table.calendar-table > tr > th {
 
 .calendar-month-name {
     font-weight: bold;
+    color: #ffffff;
+    background-color: #000000;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .calendar-event-item {

@@ -175,7 +175,7 @@ var CalendarApp = {
         if(date.getDate() == 1){
             var monthName = document.createElement("span");
             monthName.className = CalendarApp.cssPrefix + "-month-name";
-            monthName.appendChild(document.createTextNode("[" + (1 + date.getMonth()) + "]"));
+            monthName.appendChild(document.createTextNode("(" + (1 + date.getMonth()) + ")"));
             cell.appendChild(monthName);
             cell.appendChild(document.createTextNode("/" + date.getDate()));
         }
