@@ -159,23 +159,32 @@ var CalendarApp = {
             CalendarApp.cssPrefix + "-weekdaynames-row");
     },
 
-    getDateClassName: function(date, now)
+    getDateClassName: function(date, now, suffix)
     {
-        return CalendarApp.cssPrefix + (
+        var classes = [];
+        
+        if(new Date(date.getTime() + 7*24*60*60*1000).getMonth() != date.getMonth()){
+            classes.push(CalendarApp.cssPrefix + "-last-dayweek-of-month" + suffix);
+        }
+        if(new Date(date.getTime() + 1*24*60*60*1000).getMonth() != date.getMonth()){
+            classes.push(CalendarApp.cssPrefix + "-last-date-of-month" + suffix);
+        }
+        classes.push(CalendarApp.cssPrefix + (
             CalendarApp.isPastDate(date, now) ? "-pastday" :
             CalendarApp.isHoliday(date) ? "-holiday" :
-            "-normalday");
+            "-normalday") + suffix);
+        return classes.join(" ");
     },
 
     createDateHeaderCell: function(date, now)
     {
         var cell = document.createElement("td");
-        cell.className = CalendarApp.getDateClassName(date, now) + "-header";
+        cell.className = CalendarApp.getDateClassName(date, now, "-header");
 
         if(date.getDate() == 1){
             var monthName = document.createElement("span");
             monthName.className = CalendarApp.cssPrefix + "-month-name";
-            monthName.appendChild(document.createTextNode("[" + (1 + date.getMonth()) + "]"));
+            monthName.appendChild(document.createTextNode("(" + (1 + date.getMonth()) + ")"));
             cell.appendChild(monthName);
             cell.appendChild(document.createTextNode("/" + date.getDate()));
         }
@@ -193,7 +202,7 @@ var CalendarApp = {
     createDateContentCell: function(date, now, db, cellsDic)
     {
         var cell = document.createElement("td");
-        cell.className = CalendarApp.getDateClassName(date, now) + "-content";
+        cell.className = CalendarApp.getDateClassName(date, now, "-content");
 
         var ctrl = new CalendarApp.CalendarCellCtrl(cell, date, db);
         if(cellsDic){
